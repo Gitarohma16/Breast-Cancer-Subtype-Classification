@@ -1,1 +1,18 @@
-# Breast-Cancer-Subtype-Classification
+# The following explanation summarizes the main stages in applying the method to the study entitled “Machine Learning Approach on Breast Cancer Subtype Classification Targeting Key Genes Identification Based on RNA-seq Data.”
+1: Data Preprocessing - The data preprocessing process is the initial stage in this study, which aims to prepare raw data before being used in modeling. There are two types of data used, namely RNA-seq data (Supplementary_Table_1) and clinical data (Supplementary_Table_2). The entire preprocessing process is carried out in stages, including:
+   
+   - Data Cleaning: Remove irrelevant data, such as entries with empty values, unknown gene names, and samples with subtypes that are not included in the scope of the study (e.g., BRCA_Normal or Unknown).
+   - Data Normalization: Normalize RNA-seq data using the size factor normalization method and differential expression analysis (DEA) with the DESeq2 approach.
+   - Data Selection: Select genes with baseMean values ≥ 10 to ensure the quality and significance of the input data.
+   - Data Labeling: Add cancer subtype labels to each sample based on adjusted clinical data.
+   - Data Transformation: Convert categorical data (subtypes) to numeric format using label encoding techniques.
+
+To run the entire process above, you can use the "data_preprocessing.py" script available in this repository.
+
+Important note: Normalization is performed using the "DESeq2_normalization.py" script. This is necessary because DESeq2 is an R-based package, while the entire research pipeline is developed in a Python environment (Google Colab). To enable the integration of R within Python, the rpy2 library is used. However, rpy2 requires compatibility with an older version of the Pandas library.     Therefore, the normalization process is executed separately by adjusting the environment to use a compatible version, specifically Pandas 1.5.3.
+
+The final results of all data preprocessing stages are stored in (Supplementary_Table_10). This dataset has gone through the process of cleaning, normalization, gene selection, labeling, and transformation, so it is ready to be used as input data for the modeling stage.
+
+2: Modeling – The modeling process is run using the "classification_model.py" script, which allows the application of several machine learning algorithms in the One-vs-Rest approach for multiclass classification. The input data used comes from (Supplementary_Table_10), which is RNA-seq data that has gone through the process of cleaning, normalization, gene selection, subtype labeling, and label encoding. The dataset is divided into two parts, namely 80% for training data and 20% for testing data, to evaluate the model performance fairly. The three models used are Random Forest, Gradient Boosting, and XGBoos trained on the same data structure. The training results are evaluated using accuracy metrics, confusion matrix, and classification report for each cancer subtype.
+
+3: Key gene analysis – After the model training process is complete, a feature importance analysis is performed to identify the genes that contribute most to breast cancer subtype prediction. This analysis is performed separately for each model, namely Random Forest, Gradient Boosting, and XGBoost. This process is run using the "classification_model.py" script, especially in the "feature importance section". This script produces a contribution value (weight) of each gene to the subtype classification, which is used to determine the key genes in each model. The final results of this stage are stored in (Supplementary_Table_11), which contains a list of important genes from each model. The list of genes is the basis for further biological analysis, such as functional exploration or gene interaction network mapping.
